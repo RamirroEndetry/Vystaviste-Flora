@@ -24,6 +24,8 @@
   --radius: 18px;
   --radius-s: 12px;
   --tab-h: 64px;
+  --maxw: 1240px; /* strop šířky obsahu – na infopanelech a monitorech se obsah roztáhne až sem */
+  --gutter: 16px;
   --font: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color-scheme: light;
 }
@@ -62,7 +64,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round
 
 /* Horní lišta */
 .top { position: sticky; top: 0; z-index: 30; background: var(--brand-dark); color: #fff; padding-top: env(safe-area-inset-top); box-shadow: 0 2px 10px rgba(18, 57, 27, 0.3); }
-.top__inner { max-width: 760px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 10px 16px; min-height: 56px; }
+.top__inner { max-width: var(--maxw); margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 10px var(--gutter); min-height: 56px; }
 .brand { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; }
 .brand__mark { width: 32px; height: 32px; object-fit: contain; }
 .brand__word { height: 26px; width: auto; display: block; }
@@ -76,7 +78,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round
 @media (max-width: 400px) { .brand__word { display: none; } }
 
 /* Obsah */
-.view { max-width: 760px; margin: 0 auto; padding: 16px 16px 24px; }
+.view { max-width: var(--maxw); margin: 0 auto; padding: 16px var(--gutter) 24px; }
 .view:focus { outline: none; }
 .page-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
 .page-head h1 { flex: 1; }
@@ -129,7 +131,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round
 @media (min-width: 560px) { .tiles { grid-template-columns: repeat(6, 1fr); } }
 
 /* Chips */
-.chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 6px; scrollbar-width: none; -webkit-overflow-scrolling: touch; margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 6px; scrollbar-width: none; -webkit-overflow-scrolling: touch; margin: 0 calc(-1 * var(--gutter)); padding-left: var(--gutter); padding-right: var(--gutter); }
 .chips::-webkit-scrollbar { display: none; }
 .chip { flex: none; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px; padding: 8px 14px; font-size: 0.88rem; font-weight: 500; cursor: pointer; white-space: nowrap; min-height: 38px; }
 .chip[aria-pressed="true"], .chip.is-on { background: var(--brand-dark); color: #fff; border-color: var(--brand-dark); }
@@ -141,7 +143,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round
 .search input { flex: 1; min-width: 0; border: 0; background: transparent; font: inherit; font-size: 1rem; padding: 10px 0; color: var(--ink); outline: none; }
 .search input::placeholder { color: var(--muted); }
 .search .iconbtn { width: 38px; height: 38px; }
-.sticky { position: sticky; top: calc(56px + env(safe-area-inset-top)); z-index: 20; background: var(--bg); padding: 8px 0 4px; margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+.sticky { position: sticky; top: calc(56px + env(safe-area-inset-top)); z-index: 20; background: var(--bg); padding: 8px 0 4px; margin: 0 calc(-1 * var(--gutter)); padding-left: var(--gutter); padding-right: var(--gutter); }
 
 /* Seznamy míst a akcí */
 .list { display: flex; flex-direction: column; gap: 8px; }
@@ -203,7 +205,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round
 .facts span { background: var(--info-bg); color: var(--brand-dark); border-radius: 999px; padding: 4px 10px; font-size: 0.8rem; font-weight: 600; }
 
 /* Galerie a karusely */
-.scroller { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -16px; padding: 4px 16px 10px; scrollbar-width: none; }
+.scroller { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter) 10px; scrollbar-width: none; }
 .scroller::-webkit-scrollbar { display: none; }
 .gallery img { flex: none; width: 240px; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius-s); scroll-snap-align: start; background: var(--bg-2); }
 .evcard { flex: none; width: 240px; scroll-snap-align: start; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; text-decoration: none; color: var(--ink); display: flex; flex-direction: column; }
@@ -216,6 +218,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round
 .evcard__venue { font-size: 0.78rem; color: var(--muted); margin-top: auto; }
 .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
 @media (min-width: 520px) { .grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 960px) { .grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
 .grid .evcard { width: auto; }
 
 /* Mapa */
@@ -263,12 +266,22 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round
 .tabbar a svg { width: 24px; height: 24px; }
 .tabbar a[aria-current="page"] { color: var(--brand-dark); }
 .tabbar a[aria-current="page"] svg { stroke-width: 2.4; }
+/* Široké obrazovky (infopanely, tablety na šířku, monitory): lišta zůstává přibitá dole, jen je vyšší a popisek je vedle ikony. */
 @media (min-width: 900px) {
-  body { padding-bottom: 0; }
-  .tabbar { position: sticky; top: calc(56px + env(safe-area-inset-top)); bottom: auto; height: 52px; border-top: 0; border-bottom: 1px solid var(--line); }
-  .tabbar a { flex-direction: row; gap: 8px; font-size: 0.9rem; }
-  .sticky { top: calc(108px + env(safe-area-inset-top)); }
-  .toast { bottom: 24px; }
+  :root { --tab-h: 72px; --gutter: 28px; }
+  body { font-size: 17px; }
+  .tabbar { box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.08); }
+  .tabbar a { flex-direction: row; gap: 10px; font-size: 1rem; max-width: 240px; }
+  .tabbar a svg { width: 26px; height: 26px; }
+  .tabbar a[aria-current="page"] { position: relative; }
+  .tabbar a[aria-current="page"]::after { content: ""; position: absolute; left: 24px; right: 24px; top: 0; height: 3px; border-radius: 0 0 3px 3px; background: var(--brand); }
+  .section { margin-top: 28px; }
+  .tile { min-height: 104px; font-size: 0.95rem; }
+  .tile svg { width: 30px; height: 30px; }
+  .evcard, .gallery img { width: 280px; }
+  .list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; }
+  .list .letter, .list .empty { grid-column: 1 / -1; }
+  .evcard__title { font-size: 1.02rem; }
 }
 
 /* Dotyková klávesnice (infopanely) */
