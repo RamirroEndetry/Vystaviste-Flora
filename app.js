@@ -17,15 +17,21 @@
   function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch { /* soukromý režim */ } }
   if (state.theme !== 'auto') document.documentElement.dataset.theme = state.theme;
 
-  /* ---------- Režim infopanelu (?kiosk=on | off, uloží se v zařízení; ?kde=<id místa> = poloha panelu) ----------
+  /* ---------- Režim infopanelu (?kiosk=on | off | auto, uloží se v zařízení; ?kde=<id místa> = poloha panelu) ----------
      V tomto režimu aplikace nikdy neopustí svou stránku: odkazy ven, telefony a e-maily se zobrazí jako panel s QR kódem
-     (návštěvník si je otevře ve svém mobilu) a navigace používá mapu uloženou v aplikaci. Vypnout jde jen parametrem ?kiosk=off. */
+     (návštěvník si je otevře ve svém mobilu) a navigace používá mapu uloženou v aplikaci.
+     Výchozí je auto: zapne se sám na širokých obrazovkách (od 900 px – infopanely, stejně jako dotyková klávesnice),
+     na mobilech zůstává vypnutý. Ručně přebije ?kiosk=on / ?kiosk=off, ?kiosk=auto vrátí automatiku. */
   const URLQ = new URLSearchParams(location.search);
-  let KIOSK = false;
+  const KIOSK_WIDE = matchMedia('(min-width: 900px)').matches;
+  let KIOSK = KIOSK_WIDE, KIOSK_MODE = 'auto';
   try {
     if (URLQ.get('kiosk') === 'on') localStorage.setItem('vfo-kiosk', '1');
-    if (URLQ.get('kiosk') === 'off') localStorage.removeItem('vfo-kiosk');
-    KIOSK = localStorage.getItem('vfo-kiosk') === '1';
+    if (URLQ.get('kiosk') === 'off') localStorage.setItem('vfo-kiosk', '0');
+    if (URLQ.get('kiosk') === 'auto') localStorage.removeItem('vfo-kiosk');
+    const saved = localStorage.getItem('vfo-kiosk');
+    KIOSK_MODE = saved === '1' ? 'on' : saved === '0' ? 'off' : 'auto';
+    KIOSK = KIOSK_MODE === 'auto' ? KIOSK_WIDE : KIOSK_MODE === 'on';
     if (URLQ.get('kde')) localStorage.setItem('vfo-here', URLQ.get('kde'));
   } catch { /* ignore */ }
   let HERE = 'pavilon-a'; try { HERE = localStorage.getItem('vfo-here') || 'pavilon-a'; } catch { /* ignore */ }
@@ -410,7 +416,7 @@
         <div class="row" style="margin-top:12px;justify-content:space-between;flex-wrap:wrap"><span class="small">Dotyková klávesnice</span><div class="seg" role="group" aria-label="Dotyková klávesnice">${['auto', 'on', 'off'].map((m) => `<button type="button" data-kbd-mode="${m}" aria-pressed="${(window.FloraKeyboard ? window.FloraKeyboard.mode() : 'auto') === m}">${{ auto: 'Auto', on: 'Zapnuta', off: 'Vypnuta' }[m]}</button>`).join('')}</div></div>
         <p class="tiny muted" style="margin:6px 0 0">Auto = na velkých dotykových panelech. Bez háčků a čárek – hledání je nerozlišuje.</p>
         <div class="row" style="margin-top:12px;justify-content:space-between"><span class="small">Spořič obrazovky (video pro infopanely)</span><button class="btn btn--sm btn--light" type="button" id="saverBtn">${icon('film')} Přehrát</button></div>
-        <div class="row" style="margin-top:12px;justify-content:space-between;flex-wrap:wrap"><span class="small">Režim infopanelu<div class="tiny muted">${KIOSK ? 'Zapnut – odkazy ven se zobrazují jako QR kód, vypnutí jen adresou ?kiosk=off' : 'Vypnut – zapnete adresou ?kiosk=on nebo tlačítkem'}</div></span>${KIOSK ? '<span class="badge badge--ok">aktivní</span>' : `<a class="btn btn--sm btn--light" href="${location.pathname}?kiosk=on#/vice">Zapnout</a>`}</div>
+        <div class="row" style="margin-top:12px;justify-content:space-between;flex-wrap:wrap"><span class="small">Režim infopanelu<div class="tiny muted">${KIOSK ? `Zapnut${KIOSK_MODE === 'auto' ? ' automaticky (široká obrazovka)' : ' ručně'} – odkazy ven se zobrazují jako QR kód, vypnutí jen adresou ?kiosk=off` : KIOSK_MODE === 'off' ? 'Vypnut ručně – zapnete adresou ?kiosk=on nebo tlačítkem' : 'Vypnut – na obrazovkách od 900 px se zapíná sám, jinak adresou ?kiosk=on nebo tlačítkem'}</div></span>${KIOSK ? '<span class="badge badge--ok">aktivní</span>' : `<a class="btn btn--sm btn--light" href="${location.pathname}?kiosk=on#/vice">Zapnout</a>`}</div>
         <div class="row" style="margin-top:12px;justify-content:space-between"><span class="small">Poloha tohoto panelu („Jste zde“)</span><select id="hereSel" class="chip" style="min-height:36px">${D.places.filter((x) => x.gps).map((x) => `<option value="${x.id}" ${x.id === HERE ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></div>
         <div id="installRow" class="row hidden only-web" style="margin-top:12px;justify-content:space-between"><span class="small">Přidat aplikaci na plochu</span><button class="btn btn--sm" type="button" id="installBtn">Nainstalovat</button></div>
         ${isSim() ? `<div class="row" style="margin-top:12px;justify-content:space-between"><span class="small">Simulovaný čas: <b>${fmtClock(now())}, ${fmtDate(todayIso())}</b></span><button class="btn btn--sm btn--light" type="button" id="resetTime">Zrušit</button></div>` : ''}

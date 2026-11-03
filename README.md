@@ -30,7 +30,7 @@ Stavy (probíhající výstava, zimní hodiny skleníků, svátek) lze ověřit 
 
 ## Režim infopanelu (uzavřená aplikace)
 
-Pro veřejné dotykové panely zapněte režim infopanelu adresou `index.html?kiosk=on` (uloží se v zařízení; vypnout jde jen adresou `?kiosk=off`, v aplikaci žádné tlačítko k vypnutí není). V tomto režimu aplikace nikdy neopustí svou stránku:
+Na širokých obrazovkách (od 900 px – infopanely, stejně jako dotyková klávesnice) se režim infopanelu zapíná **automaticky**, na mobilech zůstává vypnutý. Ručně ho přebijete adresou `index.html?kiosk=on` nebo `?kiosk=off` (uloží se v zařízení; `?kiosk=auto` vrátí automatiku; v aplikaci žádné tlačítko k vypnutí není). V tomto režimu aplikace nikdy neopustí svou stránku:
 
 - **Odkazy ven** (web akce, Ticketportal, Google Maps, sociální sítě, flora-ol.cz…) se neotevřou – místo toho vyjede panel s **QR kódem** a adresou, návštěvník si ji načte vlastním telefonem. Panel se sám zavře po minutě.
 - **Telefony a e-maily** se zobrazí stejně: jako QR kód s kontaktem k uložení do mobilu.
