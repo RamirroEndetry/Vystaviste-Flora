@@ -1,0 +1,23 @@
+{
+  "name": "Výstaviště Flora Olomouc – průvodce",
+  "short_name": "Flora Olomouc",
+  "description": "Akce, výstavy, skleníky, rozárium, parky, vstupenky a doprava na Výstavišti Flora Olomouc.",
+  "lang": "cs",
+  "start_url": "./index.html#/dnes",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f7ef",
+  "theme_color": "#1d5e2a",
+  "icons": [
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Akce", "url": "./index.html#/akce", "description": "Co se koná" },
+    { "name": "Skleníky", "url": "./index.html#/misto/skleniky", "description": "Otevírací doba a vstupné" },
+    { "name": "Doprava a parkování", "url": "./index.html#/doprava", "description": "Jak se k nám dostat" }
+  ]
+}

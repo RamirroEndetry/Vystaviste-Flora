@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Výstaviště Flora Olomouc – průvodce</title>
+  <meta name="description" content="Akce, výstavy, otevírací doba skleníků, rozária a parků, vstupenky, doprava a parkování na Výstavišti Flora Olomouc. Neoficiální průvodce pro návštěvníky.">
+  <meta name="theme-color" content="#1d5e2a" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f1a12" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Flora Olomouc">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#view">Přeskočit na obsah</a>
+
+  <header class="top" id="top">
+    <div class="top__inner">
+      <a class="brand" href="#/dnes" aria-label="Výstaviště Flora Olomouc – domů">
+        <img class="brand__mark" src="assets/logo-mark-white.png" alt="" width="32" height="32">
+        <img class="brand__word" src="assets/logo-word-white.png" alt="Výstaviště Flora Olomouc" height="26">
+      </a>
+      <div class="top__status" id="topStatus" aria-live="polite"></div>
+      <button class="iconbtn" id="btnSearch" type="button" aria-label="Hledat akci"><svg viewBox="0 0 24 24"><use href="#i-search"/></svg></button>
+    </div>
+  </header>
+
+  <main id="view" class="view" tabindex="-1" aria-live="polite"></main>
+
+  <nav class="tabbar" aria-label="Hlavní navigace">
+    <a href="#/dnes" data-tab="dnes"><svg viewBox="0 0 24 24"><use href="#i-home"/></svg><span>Dnes</span></a>
+    <a href="#/akce" data-tab="akce"><svg viewBox="0 0 24 24"><use href="#i-cal"/></svg><span>Akce</span></a>
+    <a href="#/parky" data-tab="parky"><svg viewBox="0 0 24 24"><use href="#i-leaf"/></svg><span>Parky</span></a>
+    <a href="#/areal" data-tab="areal"><svg viewBox="0 0 24 24"><use href="#i-map"/></svg><span>Areál</span></a>
+    <a href="#/vice" data-tab="vice"><svg viewBox="0 0 24 24"><use href="#i-more"/></svg><span>Více</span></a>
+  </nav>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Ikony -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+      <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 14h3M13 14h3M8 18h3"/></symbol>
+      <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 20c0-9 5-15 15-15 0 10-5 15-14 15M5 20c3-5 7-8 11-10"/></symbol>
+      <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2zM9 4v14M15 6v14"/></symbol>
+      <symbol id="i-more" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 5 5"/></symbol>
+      <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+      <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.4 6.3 20.5l1.2-6.4L2.8 9.7l6.4-.8z"/></symbol>
+      <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+      <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 9V6a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v3a2.5 2.5 0 0 0 0 5v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-3a2.5 2.5 0 0 0 0-5zM13 5v14"/></symbol>
+      <symbol id="i-tram" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="14" rx="3"/><path d="M5 11h14M9 18l-2 3M15 18l2 3M9 7h6M12 2v2"/></symbol>
+      <symbol id="i-car" viewBox="0 0 24 24"><path d="M4 13 6 7h12l2 6v6h-2v-2H6v2H4zM7 16h.01M17 16h.01M5 13h14"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+      <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.5-7-11.5a7 7 0 0 1 14 0C19 14.5 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></symbol>
+      <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></symbol>
+      <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3 2 21h20zM12 10v4M12 17.5h.01"/></symbol>
+      <symbol id="i-food" viewBox="0 0 24 24"><path d="M5 3v8a3 3 0 0 0 3 3v7M8 3v8M11 3v8M17 3c-2 1-3 4-3 7h3v10"/></symbol>
+      <symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 5v14M17 5v14M3 10h4M3 14h4M17 10h4M17 14h4"/></symbol>
+      <symbol id="i-flower" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 9V4M12 20v-5M9 12H4M20 12h-5M9.9 9.9 6.3 6.3M17.7 17.7l-3.6-3.6M14.1 9.9l3.6-3.6M6.3 17.7l3.6-3.6"/></symbol>
+      <symbol id="i-tree" viewBox="0 0 24 24"><path d="M12 3 6 11h3l-4 6h6v4h2v-4h6l-4-6h3z"/></symbol>
+      <symbol id="i-house" viewBox="0 0 24 24"><path d="M3 10 12 3l9 7M5 9v11h14V9M10 20v-6h4v6"/></symbol>
+      <symbol id="i-basket" viewBox="0 0 24 24"><path d="M3 10h18l-2 10H5zM8 10l4-6 4 6M8 14v3M12 14v3M16 14v3"/></symbol>
+      <symbol id="i-dog" viewBox="0 0 24 24"><path d="M4 9h5l3-4 3 4h5l-3 4v6H7v-6zM9 15h.01M15 15h.01"/></symbol>
+      <symbol id="i-gift" viewBox="0 0 24 24"><path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7c-2-4-6-3-5-1s5 1 5 1m0 0c2-4 6-3 5-1s-5 1-5 1"/></symbol>
+      <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V6l11-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></symbol>
+    </defs>
+  </svg>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <script src="keyboard.js"></script>
+  <script src="screensaver.js"></script>
+</body>
+</html>
