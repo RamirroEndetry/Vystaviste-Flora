@@ -1,6 +1,6 @@
 /* Service worker: aplikace funguje i bez signálu v pavilonech a sklenících. Shell se předcachuje, fotografie za běhu. */
-const VERSION = 'vfo-v1';
-const SHELL = ['./', './index.html', './style.css', './app.js', './keyboard.js', './screensaver.js', './data.js', './manifest.webmanifest', './assets/icon.svg', './assets/logo-mark-white.png', './assets/logo-word-white.png'];
+const VERSION = 'vfo-v3';
+const SHELL = ['./', './index.html', './style.css', './app.js', './keyboard.js', './screensaver.js', './data.js', './assets/vendor/qrcode.js', './manifest.webmanifest', './assets/icon.svg', './assets/logo-mark-white.png', './assets/logo-word-white.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));

@@ -1,0 +1,835 @@
+[
+[
+"Olomouc-Smetanovy sady",
+49.58556,
+17.25486,
+"node",
+"halt"
+],
+[
+"Smetanovy sady",
+49.58598,
+17.25436,
+"node",
+"platform"
+],
+[
+"Smetanovy sady",
+49.58533,
+17.25292,
+"node",
+"platform"
+],
+[
+"Tržnice",
+49.58909,
+17.25428,
+"node",
+"tram_stop"
+],
+[
+"Na Střelnici",
+49.59897,
+17.25141,
+"node",
+"platform"
+],
+[
+"Flora",
+49.59113,
+17.24351,
+"node",
+"hotel"
+],
+[
+"Tržnice, plocha",
+49.58878,
+17.25384,
+"node",
+"platform"
+],
+[
+"Tržnice, plocha",
+49.58871,
+17.25461,
+"node",
+"platform"
+],
+[
+"Big food",
+49.59447,
+17.24899,
+"node",
+"fast_food"
+],
+[
+"Šantovka",
+49.58764,
+17.25808,
+"node",
+"tram_stop"
+],
+[
+"Výstaviště Flora",
+49.58928,
+17.24514,
+"node",
+"tram_stop"
+],
+[
+"Výstaviště Flora",
+49.5894,
+17.24539,
+"node",
+"tram_stop"
+],
+[
+"Tržnice",
+49.58967,
+17.25324,
+"node",
+"platform"
+],
+[
+"Tržnice",
+49.58972,
+17.25263,
+"node",
+"platform"
+],
+[
+"tř. Svobody - tržnice, staré autobusové nádraží",
+49.58905,
+17.2541,
+"node",
+""
+],
+[
+"Legionářská - Hynaisova ASO",
+49.59692,
+17.24664,
+"node",
+""
+],
+[
+"Tržnice",
+49.58934,
+17.25365,
+"node",
+"tram_stop"
+],
+[
+"Šantovka",
+49.58792,
+17.25784,
+"node",
+"tram_stop"
+],
+[
+"Na Střelnici",
+49.59814,
+17.25153,
+"node",
+"platform"
+],
+[
+"Botanická zahrada a rozárium",
+49.59382,
+17.25617,
+"node",
+""
+],
+[
+"Metasekvoje na Střelnici",
+49.59995,
+17.25094,
+"node",
+""
+],
+[
+"Kontrolní místo č.2 Palmový skleník",
+49.58724,
+17.24977,
+"node",
+"information"
+],
+[
+"Tržnice",
+49.58978,
+17.25264,
+"node",
+"stop_position"
+],
+[
+"Výstaviště Flora Olomouc, a. s.",
+49.5886,
+17.24511,
+"node",
+""
+],
+[
+"Na Střelnici",
+49.59817,
+17.25163,
+"node",
+"stop_position"
+],
+[
+"Smetanovy sady",
+49.58597,
+17.25446,
+"node",
+"stop_position"
+],
+[
+"Tržnice",
+49.58988,
+17.25243,
+"node",
+"stop_position"
+],
+[
+"Na Střelnici",
+49.59897,
+17.25123,
+"node",
+"stop_position"
+],
+[
+"Smetanovy sady",
+49.58539,
+17.25288,
+"node",
+"stop_position"
+],
+[
+"Tržnice",
+49.58963,
+17.25318,
+"node",
+"stop_position"
+],
+[
+"Cykloturistická odpočívka Olomouc-Smetanovy sady",
+49.58929,
+17.24987,
+"node",
+"information"
+],
+[
+"Rozárium",
+49.59271,
+17.26276,
+"node",
+""
+],
+[
+"Coffee Park",
+49.58767,
+17.24598,
+"node",
+"cafe"
+],
+[
+"Šantovka",
+49.5887,
+17.25727,
+"node",
+""
+],
+[
+"Tržnice",
+49.58984,
+17.25237,
+"node",
+"platform"
+],
+[
+"Tržnice",
+49.58951,
+17.25358,
+"node",
+"platform"
+],
+[
+"Tržnice, plocha",
+49.58875,
+17.25413,
+"node",
+"platform"
+],
+[
+"Tržnice, plocha",
+49.5886,
+17.25451,
+"node",
+"platform"
+],
+[
+"Tržnice, plocha",
+49.58856,
+17.25441,
+"node",
+"platform"
+],
+[
+"Tržnice, plocha",
+49.58848,
+17.25482,
+"node",
+"platform"
+],
+[
+"Tržnice, plocha",
+49.58839,
+17.25483,
+"node",
+"platform"
+],
+[
+"Tržnice, plocha",
+49.58836,
+17.25513,
+"node",
+"platform"
+],
+[
+"Tržnice, plocha Olympia",
+49.58888,
+17.25417,
+"node",
+"platform"
+],
+[
+"Pho co Asian foods",
+49.59708,
+17.26212,
+"node",
+"restaurant"
+],
+[
+"Herna Galerie Šantovka",
+49.58711,
+17.25837,
+"node",
+"adult_gaming_centre"
+],
+[
+"Döner kebab Šantovka",
+49.58741,
+17.25682,
+"node",
+"fast_food"
+],
+[
+"Max Weissmann, Eliška Weissmannová, Irma Götzlingerová, Helena Haasová, Hanuš Haas",
+49.59745,
+17.266,
+"node",
+""
+],
+[
+"Šantovka Star(t)s",
+49.58722,
+17.25812,
+"node",
+"yes"
+],
+[
+"Kung Food",
+49.59665,
+17.24262,
+"node",
+"restaurant"
+],
+[
+"Cofee Park Rozárium",
+49.59214,
+17.26203,
+"node",
+"fast_food"
+],
+[
+"Greta Haasová",
+49.58813,
+17.25381,
+"node",
+""
+],
+[
+"Greta Haasová",
+49.58812,
+17.25383,
+"node",
+""
+],
+[
+"Pekac foodie market",
+49.59559,
+17.24842,
+"node",
+"convenience"
+],
+[
+"Zmrzlinárium Flora",
+49.58741,
+17.24631,
+"node",
+"ice_cream"
+],
+[
+"Fontána",
+49.59463,
+17.25081,
+"node",
+"books"
+],
+[
+"Fontána",
+49.58721,
+17.25114,
+"node",
+"restaurant"
+],
+[
+"Tržnice",
+49.58946,
+17.25355,
+"node",
+"stop_position"
+],
+[
+"Apetit Fast Food",
+49.59234,
+17.2502,
+"node",
+"fast_food"
+],
+[
+"Apartmán Šantovka",
+49.58891,
+17.2591,
+"node",
+"apartment"
+],
+[
+"Na střelnici",
+49.59989,
+17.2506,
+"way",
+"secondary"
+],
+[
+"Smetanovy sady",
+49.58819,
+17.25011,
+"way",
+"park"
+],
+[
+"Čechovy sady",
+49.5929,
+17.24499,
+"way",
+"park"
+],
+[
+"Hanáckého pluku",
+49.59767,
+17.25682,
+"way",
+"residential"
+],
+[
+"UP – Právnická fakulta",
+49.59053,
+17.26273,
+"way",
+"university"
+],
+[
+"Zamenhofova",
+49.58677,
+17.24765,
+"way",
+"residential"
+],
+[
+"Smetanovy sady",
+49.58597,
+17.25303,
+"way",
+"service"
+],
+[
+"Hudební nástroje Petr Fila",
+49.59388,
+17.24552,
+"way",
+"apartments"
+],
+[
+"Městská tržnice",
+49.5897,
+17.25483,
+"way",
+"industrial"
+],
+[
+"Výstaviště Flora - pavilon A",
+49.58835,
+17.24534,
+"way",
+"exhibition_centre"
+],
+[
+"Výstaviště Flora - pavilon E",
+49.58753,
+17.24687,
+"way",
+"exhibition_centre"
+],
+[
+"Hanáckého pluku",
+49.59667,
+17.25737,
+"way",
+"residential"
+],
+[
+"Pod Dómem",
+49.59832,
+17.2596,
+"way",
+"park"
+],
+[
+"Tropický skleník",
+49.58669,
+17.24965,
+"way",
+"greenhouse"
+],
+[
+"Výstaviště Flora - pavilon G",
+49.58645,
+17.2502,
+"way",
+"exhibition_centre"
+],
+[
+"Botanická zahrada, Sbírkové skleníky",
+49.5872,
+17.24932,
+"way",
+"yes"
+],
+[
+"Kaktusový skleník",
+49.58685,
+17.24943,
+"way",
+"greenhouse"
+],
+[
+"Výstaviště Flora - pavilon H",
+49.58606,
+17.25066,
+"way",
+"exhibition_centre"
+],
+[
+"Subtropický skleník",
+49.5866,
+17.24988,
+"way",
+"greenhouse"
+],
+[
+"CENTRAL PARK FLORA",
+49.59109,
+17.24339,
+"way",
+"hotel"
+],
+[
+"Vlasové studio Petra Nowaková",
+49.59464,
+17.24228,
+"way",
+"residential"
+],
+[
+"Tržnice, plocha",
+49.58856,
+17.25453,
+"way",
+"bus_station"
+],
+[
+"Pod Dómem",
+49.59808,
+17.26249,
+"way",
+"park"
+],
+[
+"Na střelnici",
+49.60084,
+17.24914,
+"way",
+"secondary"
+],
+[
+"Olomouc - Smetanovy sady",
+49.58553,
+17.25489,
+"way",
+"platform"
+],
+[
+"Bezručovy sady",
+49.59251,
+17.25867,
+"way",
+"park"
+],
+[
+"Na střelnici",
+49.59782,
+17.25197,
+"way",
+"secondary"
+],
+[
+"Na střelnici",
+49.59766,
+17.25237,
+"way",
+"secondary"
+],
+[
+"Galerie Šantovka",
+49.58707,
+17.25763,
+"way",
+"mall"
+],
+[
+"Na střelnici",
+49.59899,
+17.25122,
+"way",
+"secondary"
+],
+[
+"Na střelnici",
+49.59791,
+17.25241,
+"way",
+"residential"
+],
+[
+"Na střelnici",
+49.5995,
+17.25092,
+"way",
+"secondary"
+],
+[
+"Palmový skleník",
+49.58701,
+17.24981,
+"way",
+"greenhouse"
+],
+[
+"Botanická zahrada",
+49.5927,
+17.25952,
+"way",
+"garden"
+],
+[
+"Botanická zahrada Univerzity Palackého",
+49.58615,
+17.24983,
+"way",
+"garden"
+],
+[
+"Rozárium",
+49.5923,
+17.26124,
+"way",
+"garden"
+],
+[
+"FunPark Šantovka",
+49.58714,
+17.26011,
+"way",
+"festival_grounds"
+],
+[
+"Tržnice",
+49.58901,
+17.25457,
+"way",
+"platform"
+],
+[
+"Tržnice",
+49.58946,
+17.25334,
+"way",
+"platform"
+],
+[
+"Právnická fakulta UP",
+49.59012,
+17.26187,
+"way",
+"university"
+],
+[
+"Zamenhofova",
+49.58648,
+17.24879,
+"way",
+"residential"
+],
+[
+"Na střelnici",
+49.5984,
+17.25152,
+"way",
+"secondary"
+],
+[
+"Vlasová klinika",
+49.58856,
+17.25911,
+"way",
+"doctors"
+],
+[
+"Redstone – Šantovka Living",
+49.58431,
+17.2611,
+"way",
+""
+],
+[
+"Tržnice",
+49.58939,
+17.25523,
+"way",
+"marketplace"
+],
+[
+"Na střelnici",
+49.59868,
+17.25138,
+"way",
+"secondary"
+],
+[
+"Na střelnici",
+49.59848,
+17.25152,
+"way",
+"secondary"
+],
+[
+"Na střelnici",
+49.59816,
+17.25177,
+"way",
+"secondary"
+],
+[
+"Na střelnici",
+49.59788,
+17.25204,
+"way",
+"secondary"
+],
+[
+"Hanáckého pluku",
+49.59712,
+17.25712,
+"way",
+"residential"
+],
+[
+"Zamenhofova",
+49.58744,
+17.24607,
+"way",
+"residential"
+],
+[
+"Olomouc, Čechovy Sady - Bouzov",
+49.64545,
+17.0686,
+"relation",
+""
+],
+[
+"Park Na Střelnici",
+49.59942,
+17.25,
+"relation",
+"park"
+],
+[
+"Galerie Šantovka",
+49.58707,
+17.25763,
+"relation",
+"retail"
+],
+[
+"Na Střelnici",
+49.59856,
+17.25143,
+"relation",
+"stop_area"
+],
+[
+"Smetanovy sady",
+49.58566,
+17.25367,
+"relation",
+"stop_area"
+],
+[
+"Tržnice",
+49.58967,
+17.25298,
+"relation",
+"stop_area"
+],
+[
+"Tržnice plocha",
+49.58857,
+17.25453,
+"relation",
+"stop_area"
+],
+[
+"Bus 11: Na Střelnici => Svatý Kopeček",
+49.61005,
+17.30626,
+"relation",
+""
+],
+[
+"Tržnice",
+49.58925,
+17.25396,
+"relation",
+"stop_area"
+]
+]

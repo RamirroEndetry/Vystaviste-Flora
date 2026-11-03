@@ -17,6 +17,24 @@
   function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch { /* soukromý režim */ } }
   if (state.theme !== 'auto') document.documentElement.dataset.theme = state.theme;
 
+  /* ---------- Režim infopanelu (?kiosk=on | off, uloží se v zařízení; ?kde=<id místa> = poloha panelu) ----------
+     V tomto režimu aplikace nikdy neopustí svou stránku: odkazy ven, telefony a e-maily se zobrazí jako panel s QR kódem
+     (návštěvník si je otevře ve svém mobilu) a navigace používá mapu uloženou v aplikaci. Vypnout jde jen parametrem ?kiosk=off. */
+  const URLQ = new URLSearchParams(location.search);
+  let KIOSK = false;
+  try {
+    if (URLQ.get('kiosk') === 'on') localStorage.setItem('vfo-kiosk', '1');
+    if (URLQ.get('kiosk') === 'off') localStorage.removeItem('vfo-kiosk');
+    KIOSK = localStorage.getItem('vfo-kiosk') === '1';
+    if (URLQ.get('kde')) localStorage.setItem('vfo-here', URLQ.get('kde'));
+  } catch { /* ignore */ }
+  let HERE = 'pavilon-a'; try { HERE = localStorage.getItem('vfo-here') || 'pavilon-a'; } catch { /* ignore */ }
+  document.body.classList.toggle('kiosk', KIOSK);
+  if (KIOSK) {
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    const vp = document.querySelector('meta[name=viewport]'); if (vp) vp.content += ', maximum-scale=1, user-scalable=no';
+  }
+
   /* ---------- Čas (s možností simulace ?now=2026-11-06T10:40 pro testování) ---------- */
   let timeOffset = 0;
   (function initTime() {
@@ -162,7 +180,7 @@
   /* ---------- Router ---------- */
   const routes = {
     dnes: renderHome, akce: renderEvents, parky: renderParks, areal: renderAreal, misto: renderPlace, vice: renderMore,
-    vstupenky: renderTickets, doprava: renderTransport, parkovani: renderParking, kontakt: renderContact, program: renderProgram, aktuality: renderNews, kalendar: renderAnnual,
+    vstupenky: renderTickets, doprava: renderTransport, parkovani: renderParking, kontakt: renderContact, program: renderProgram, aktuality: renderNews, kalendar: renderAnnual, mapa: renderMap,
   };
   let currentQuery = {};
   function parseHash() {
@@ -176,7 +194,7 @@
     const { route, param, q } = parseHash();
     currentQuery = q;
     view.innerHTML = routes[route](param, q) || '';
-    const tab = { misto: 'parky', vstupenky: 'vice', doprava: 'vice', parkovani: 'vice', kontakt: 'vice', program: 'vice', aktuality: 'vice', kalendar: 'akce' }[route] || route;
+    const tab = { misto: 'parky', vstupenky: 'vice', doprava: 'vice', parkovani: 'vice', kontakt: 'vice', program: 'vice', aktuality: 'vice', kalendar: 'akce', mapa: 'areal' }[route] || route;
     if (route === 'misto' && placeById[param] && ['pavilon', 'gastro', 'trznice'].includes(placeById[param].kind)) document.querySelectorAll('.tabbar a').forEach((a) => a.dataset.tab === 'areal' ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
     else document.querySelectorAll('.tabbar a').forEach((a) => (a.dataset.tab === tab ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
     if (!render.keepScroll) window.scrollTo(0, 0);
@@ -340,7 +358,7 @@
   function renderAreal() {
     const pav = D.places.filter((p) => p.kind === 'pavilon'), gastro = D.places.filter((p) => p.kind === 'gastro'), trz = placeById.trznice;
     return `<div class="page-head"><div class="grow"><h1>Plán areálu</h1><p class="sub">${esc(D.center.address)}</p></div></div>
-      <section class="card card--hero"><img class="hero__img" src="assets/photos/areal-mapa.jpg" alt="Mapa: výstaviště leží u Smetanových sadů mezi Wolkerovou a Poupětovou ulicí"><div class="hero__body small">Areál leží na okraji <a href="#/misto/smetanovy-sady">Smetanových sadů</a>. Hlavní vstup a pokladny jsou u <a href="#/misto/pavilon-a">pavilonu A</a> (Wolkerova ulice, zastávka tramvaje Výstaviště Flora). Pavilony E, G, H a sbírkové skleníky jsou v parku, Food park mezi pavilony A a E. Při akcích vám poradí brigádníci u vstupů.<div class="row" style="margin-top:10px;gap:8px"><a class="btn btn--light grow" href="${mapsUrl(D.center.gps)}" target="_blank" rel="noopener">${icon('pin')} Navigovat</a><a class="btn btn--light grow" href="#/doprava">${icon('tram')} Doprava</a></div></div></section>
+      <section class="card card--hero"><img class="hero__img" src="assets/photos/areal-mapa.jpg" alt="Mapa: výstaviště leží u Smetanových sadů mezi Wolkerovou a Poupětovou ulicí"><div class="hero__body small">Areál leží na okraji <a href="#/misto/smetanovy-sady">Smetanových sadů</a>. Hlavní vstup a pokladny jsou u <a href="#/misto/pavilon-a">pavilonu A</a> (Wolkerova ulice, zastávka tramvaje Výstaviště Flora). Pavilony E, G, H a sbírkové skleníky jsou v parku, Food park mezi pavilony A a E. Při akcích vám poradí brigádníci u vstupů.<div class="row" style="margin-top:10px;gap:8px"><a class="btn btn--light grow" href="#/mapa?cil=pavilon-a">${icon('pin')} Mapa okolí</a><a class="btn btn--light grow" href="#/doprava">${icon('tram')} Doprava</a></div></div></section>
       <section class="section"><div class="section__head"><h2>Pavilony a plochy</h2></div><div class="list">${pav.map(placeRow).join('')}</div></section>
       <section class="section"><div class="section__head"><h2>Občerstvení</h2></div><div class="list">${gastro.map(placeRow).join('')}</div><p class="tiny muted" style="margin-top:8px">V rozáriu na tř. 17. listopadu funguje v otevírací době stánek Coffee Park.</p></section>
       <section class="section"><div class="section__head"><h2>Olomoucká tržnice</h2></div>${placeRow(trz)}</section>
@@ -360,7 +378,7 @@
           <div class="row row--wrap" style="margin-top:6px"><span class="status status--${st.cls}">${esc(st.label)}</span>${today && !(p.hours && p.hours.always) ? `<span class="tiny muted">dnes ${fmtMin(today[0])}–${fmtMin(today[1])}</span>` : ''}${p.free || (p.hours && p.hours.always) ? '<span class="badge badge--ok">vstup zdarma</span>' : ''}${p.dogs === false ? '<span class="badge badge--warn">bez psů</span>' : ''}</div>
           ${p.facts ? `<div class="facts">${p.facts.map((f) => `<span>${esc(f)}</span>`).join('')}</div>` : ''}
           <div class="actions">
-            ${p.gps ? `<a class="action" href="${mapsUrl(p.gps)}" target="_blank" rel="noopener">${icon('pin')}Navigovat</a>` : ''}
+            ${p.gps ? `<a class="action" href="#/mapa?cil=${p.id}">${icon('pin')}Na mapě</a>` : ''}
             ${p.phone ? `<a class="action" href="${tel(p.phone)}">${icon('phone')}Zavolat</a>` : `<a class="action" href="#/kontakt">${icon('phone')}Kontakt</a>`}
             ${p.prices && !p.free ? `<a class="action" href="#/vstupenky">${icon('ticket')}Vstupenky</a>` : `<a class="action" href="#/parky">${icon('leaf')}Parky</a>`}
             <a class="action" href="${esc(p.url || D.center.web)}" target="_blank" rel="noopener">${icon('globe')}Web</a>
@@ -392,7 +410,9 @@
         <div class="row" style="margin-top:12px;justify-content:space-between;flex-wrap:wrap"><span class="small">Dotyková klávesnice</span><div class="seg" role="group" aria-label="Dotyková klávesnice">${['auto', 'on', 'off'].map((m) => `<button type="button" data-kbd-mode="${m}" aria-pressed="${(window.FloraKeyboard ? window.FloraKeyboard.mode() : 'auto') === m}">${{ auto: 'Auto', on: 'Zapnuta', off: 'Vypnuta' }[m]}</button>`).join('')}</div></div>
         <p class="tiny muted" style="margin:6px 0 0">Auto = na velkých dotykových panelech. Bez háčků a čárek – hledání je nerozlišuje.</p>
         <div class="row" style="margin-top:12px;justify-content:space-between"><span class="small">Spořič obrazovky (video pro infopanely)</span><button class="btn btn--sm btn--light" type="button" id="saverBtn">${icon('film')} Přehrát</button></div>
-        <div id="installRow" class="row hidden" style="margin-top:12px;justify-content:space-between"><span class="small">Přidat aplikaci na plochu</span><button class="btn btn--sm" type="button" id="installBtn">Nainstalovat</button></div>
+        <div class="row" style="margin-top:12px;justify-content:space-between;flex-wrap:wrap"><span class="small">Režim infopanelu<div class="tiny muted">${KIOSK ? 'Zapnut – odkazy ven se zobrazují jako QR kód, vypnutí jen adresou ?kiosk=off' : 'Vypnut – zapnete adresou ?kiosk=on nebo tlačítkem'}</div></span>${KIOSK ? '<span class="badge badge--ok">aktivní</span>' : `<a class="btn btn--sm btn--light" href="${location.pathname}?kiosk=on#/vice">Zapnout</a>`}</div>
+        <div class="row" style="margin-top:12px;justify-content:space-between"><span class="small">Poloha tohoto panelu („Jste zde“)</span><select id="hereSel" class="chip" style="min-height:36px">${D.places.filter((x) => x.gps).map((x) => `<option value="${x.id}" ${x.id === HERE ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></div>
+        <div id="installRow" class="row hidden only-web" style="margin-top:12px;justify-content:space-between"><span class="small">Přidat aplikaci na plochu</span><button class="btn btn--sm" type="button" id="installBtn">Nainstalovat</button></div>
         ${isSim() ? `<div class="row" style="margin-top:12px;justify-content:space-between"><span class="small">Simulovaný čas: <b>${fmtClock(now())}, ${fmtDate(todayIso())}</b></span><button class="btn btn--sm btn--light" type="button" id="resetTime">Zrušit</button></div>` : ''}
       </section>
       <section class="card card--flat section small">
@@ -429,21 +449,21 @@
       <section class="card section">
         <h2>${icon('car', 'ico')} Autem</h2>
         <p class="small" style="margin-top:8px">Výstaviště leží na hlavním příjezdu od Brna; od Ostravy a Mohelnice se napojíte přes vnější obchvat, dostupné je i z vnitřního městského okruhu. Při akcích parkujte zdarma na P6 u Galerie Šantovka. <a href="#/parkovani">Všechna parkoviště</a>.</p>
-        <a class="btn btn--light btn--block" href="${mapsUrl(D.center.gps)}" target="_blank" rel="noopener">${icon('pin')} Navigovat k pavilonu A</a>
+        <a class="btn btn--light btn--block" href="#/mapa?cil=pavilon-a">${icon('pin')} Pavilon A na mapě</a>
       </section>`;
   }
   const parkingName = (id) => (D.parking.find((p) => p.id === id) || {}).name || id;
   function renderParking() {
     const p = state.parking;
     return `<div class="page-head">${backBtn()}<div class="grow"><h1>Parkování</h1><p class="sub">Parkoviště v areálu jsou při akcích vyhrazena vystavovatelům</p></div></div>
-      ${p ? `<section class="card card--brand"><div class="row"><div class="grow"><div class="small" style="opacity:.9">Zaparkováno ${fmtClock(new Date(p.at))}</div><div class="big" style="font-size:1.4rem;margin-top:6px">${esc(parkingName(p.lot))}</div>${p.spot ? `<div class="small" style="margin-top:4px">${esc(p.spot)}</div>` : ''}</div></div><div class="row" style="margin-top:14px;gap:8px">${(D.parking.find((x) => x.id === p.lot) || {}).gps ? `<a class="btn btn--light grow" href="${mapsUrl(D.parking.find((x) => x.id === p.lot).gps)}" target="_blank" rel="noopener">${icon('pin')} K autu</a>` : ''}<button class="btn btn--danger" type="button" data-endpark>Odjíždím</button></div></section>`
+      ${p ? `<section class="card card--brand"><div class="row"><div class="grow"><div class="small" style="opacity:.9">Zaparkováno ${fmtClock(new Date(p.at))}</div><div class="big" style="font-size:1.4rem;margin-top:6px">${esc(parkingName(p.lot))}</div>${p.spot ? `<div class="small" style="margin-top:4px">${esc(p.spot)}</div>` : ''}</div></div><div class="row" style="margin-top:14px;gap:8px"><a class="btn btn--light grow" href="#/mapa?cil=park:${esc(p.lot)}">${icon('pin')} K autu</a><button class="btn btn--danger" type="button" data-endpark>Odjíždím</button></div></section>`
         : `<section class="card"><h2>Kde jsem zaparkoval(a)</h2><p class="small muted" style="margin-top:4px">Poznamenejte si parkoviště a místo – po výstavě se vám bude hodit.</p>
         <form id="parkForm" class="stack" style="margin-top:10px">
           <label class="field">Parkoviště<select name="lot">${D.parking.map((x) => `<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></label>
           <label class="field">Kde stojím (volitelné)<input type="text" name="spot" placeholder="např. řada C, u vjezdu, modrý sloup" maxlength="60"></label>
           <button class="btn btn--block" type="submit">${icon('car')} Zapamatovat</button>
         </form></section>`}
-      <section class="section"><div class="section__head"><h2>Kde zaparkovat</h2></div><div class="stack">${D.parking.map((x) => `<div class="card ${x.main ? 'card--ok' : 'card--flat'}"><div class="row"><div class="grow"><b>${esc(x.name)}</b>${x.cap ? ` <span class="badge">${esc(x.cap)}</span>` : ''}<div class="small muted">${esc(x.dist)}</div><div class="small" style="margin-top:4px">${esc(x.note)}</div></div>${x.gps ? `<a class="iconbtn iconbtn--ink" href="${mapsUrl(x.gps)}" target="_blank" rel="noopener" aria-label="Navigovat">${icon('pin')}</a>` : ''}</div>${x.url ? `<a class="small" href="${esc(x.url)}" target="_blank" rel="noopener">Aktuální podmínky a ceník</a>` : ''}</div>`).join('')}</div></section>
+      <section class="section"><div class="section__head"><h2>Kde zaparkovat</h2></div><div class="stack">${D.parking.map((x) => `<div class="card ${x.main ? 'card--ok' : 'card--flat'}"><div class="row"><div class="grow"><b>${esc(x.name)}</b>${x.cap ? ` <span class="badge">${esc(x.cap)}</span>` : ''}<div class="small muted">${esc(x.dist)}</div><div class="small" style="margin-top:4px">${esc(x.note)}</div></div>${x.gps ? `<a class="iconbtn iconbtn--ink" href="#/mapa?cil=park:${x.id}" aria-label="Na mapě">${icon('pin')}</a>` : ''}</div>${x.url ? `<a class="small" href="${esc(x.url)}" target="_blank" rel="noopener">Aktuální podmínky a ceník</a>` : ''}</div>`).join('')}</div></section>
       <section class="card card--flat section small">Zájezdové autobusy: vystoupení u starého autobusového nádraží (tř. Svobody × Polská), parkování na vyhrazené ploše naproti Baumaxu v Holické ulici. Podrobnosti k parkování na konkrétní akci bývají na stránce akce.</section>`;
   }
   function renderContact() {
@@ -456,7 +476,7 @@
       <section class="card section">
         <h2>${esc(C.company)}</h2>
         <dl class="kv" style="margin-top:10px"><dt>Adresa</dt><dd style="text-align:right">${esc(C.address)}</dd><dt>Ústředna</dt><dd><a href="${tel(C.phone)}">${esc(C.phone)}</a></dd><dt>E-mail</dt><dd><a href="mailto:${esc(C.email)}">${esc(C.email)}</a></dd><dt>Vstupenky</dt><dd><a href="${tel(C.tickets.phone)}">${esc(C.tickets.phone)}</a></dd><dt>IČO</dt><dd>${esc(C.ico)}</dd><dt>Datová schránka</dt><dd>${esc(C.datovka)}</dd></dl>
-        <div class="row" style="margin-top:12px;gap:8px"><a class="btn btn--light grow" href="${mapsUrl(C.gps)}" target="_blank" rel="noopener">${icon('pin')} Navigovat</a><a class="btn btn--light grow" href="${tel(C.phone)}">${icon('phone')} Zavolat</a></div>
+        <div class="row" style="margin-top:12px;gap:8px"><a class="btn btn--light grow" href="#/mapa?cil=pavilon-a">${icon('pin')} Na mapě</a><a class="btn btn--light grow" href="${tel(C.phone)}">${icon('phone')} Zavolat</a></div>
         <p class="tiny muted" style="margin:10px 0 0">Společnost je ve 100% vlastnictví statutárního města Olomouce. Sídlo je v administrativní budově u pavilonu A.</p>
       </section>
       <section class="card section"><h2>Sledujte nás</h2><div class="row row--wrap" style="margin-top:8px;gap:8px"><a class="btn btn--light btn--sm" href="${esc(C.social.facebook)}" target="_blank" rel="noopener">Facebook</a><a class="btn btn--light btn--sm" href="${esc(C.social.instagram)}" target="_blank" rel="noopener">Instagram</a><a class="btn btn--light btn--sm" href="${esc(C.social.youtube)}" target="_blank" rel="noopener">YouTube</a></div></section>
@@ -468,6 +488,92 @@
       <div class="stack">${items.map((n) => `<a class="card" href="${esc(n.url)}" target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit"><div class="tiny muted">${fmtDate(n.date)}</div><b>${esc(n.title)}</b><div class="small muted" style="margin-top:4px">${esc(n.text)}</div></a>`).join('')}</div>
       <p class="tiny muted" style="margin-top:14px">Všechny aktuality: <a href="https://www.flora-ol.cz/aktuality" target="_blank" rel="noopener">flora-ol.cz/aktuality</a>.</p>`;
   }
+
+  /* ---------- Mapa okolí (dlaždice OSM uložené v aplikaci, viz scripts/make-map.py) ---------- */
+  const M = D.map;
+  function mapXY(gps) { const n = 2 ** M.zoom, lat = gps[0] * Math.PI / 180; const x = (gps[1] + 180) / 360 * n, y = (1 - Math.log(Math.tan(lat) + 1 / Math.cos(lat)) / Math.PI) / 2 * n; return [(x - M.tx0) * M.tile, (y - M.ty0) * M.tile]; }
+  const onMap = (gps) => { const [x, y] = mapXY(gps); return x > 0 && y > 0 && x < M.w && y < M.h; };
+  function distance(a, b) { const R = 6371000, dLat = (b[0] - a[0]) * Math.PI / 180, dLon = (b[1] - a[1]) * Math.PI / 180, la = a[0] * Math.PI / 180, lb = b[0] * Math.PI / 180; const h = Math.sin(dLat / 2) ** 2 + Math.cos(la) * Math.cos(lb) * Math.sin(dLon / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); }
+  function bearing(a, b) { const la = a[0] * Math.PI / 180, lb = b[0] * Math.PI / 180, dLon = (b[1] - a[1]) * Math.PI / 180; const y = Math.sin(dLon) * Math.cos(lb), x = Math.cos(la) * Math.sin(lb) - Math.sin(la) * Math.cos(lb) * Math.cos(dLon); return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360; }
+  const compass = (deg) => ['na sever', 'na severovýchod', 'na východ', 'na jihovýchod', 'na jih', 'na jihozápad', 'na západ', 'na severozápad'][Math.round(deg / 45) % 8];
+  const arrow = (deg) => ['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'][Math.round(deg / 45) % 8];
+  function mapTargets() {
+    const t = [];
+    for (const p of D.places) if (p.gps) t.push({ id: p.id, name: p.name, kind: p.kind === 'park' || p.kind === 'zahrada' || p.kind === 'sklenik' ? 'park' : 'place', gps: p.gps, href: `#/misto/${p.id}`, sub: p.short });
+    for (const x of D.parking) if (x.gps) t.push({ id: 'park:' + x.id, name: x.name, kind: 'parking', gps: x.gps, href: '#/parkovani', sub: x.note });
+    for (const st of D.transport.stops) t.push({ id: 'stop:' + st.id, name: st.name, kind: 'stop', gps: st.gps, href: '#/doprava', sub: st.lines ? `Linky ${st.lines.join(', ')}` : '' });
+    return t;
+  }
+  let mapScale = 0.75;
+  function renderMap(_, q) {
+    if (!M) return `<div class="empty">Mapa není k dispozici.</div>`;
+    const targets = mapTargets(), target = targets.find((t) => t.id === q.cil), here = targets.find((t) => t.id === HERE) || targets[0];
+    const pin = (t) => { if (!onMap(t.gps)) return ''; const [x, y] = mapXY(t.gps); const cls = t.id === here.id ? 'pin--here' : t.kind === 'parking' ? 'pin--park' : t.kind === 'stop' ? 'pin--stop' : ''; return `<a class="pin ${cls} ${target && t.id === target.id ? 'is-target' : ''}" href="#/mapa?cil=${encodeURIComponent(t.id)}" style="left:${(x / M.w * 100).toFixed(3)}%;top:${(y / M.h * 100).toFixed(3)}%" title="${esc(t.name)}"><i></i><span>${t.id === here.id ? 'Jste zde · ' : ''}${esc(t.name)}</span></a>`; };
+    let info = '';
+    if (target) {
+      const d = distance(here.gps, target.gps), b = bearing(here.gps, target.gps), mins = Math.max(1, Math.round(d / 75));
+      info = `<section class="card section" style="margin-top:12px"><div class="row"><div class="dirn" aria-hidden="true">${target.id === here.id ? '📍' : arrow(b)}</div><div class="grow"><h2>${esc(target.name)}</h2><div class="small muted">${esc(target.sub || '')}</div>${target.id === here.id ? '<div class="small" style="margin-top:4px">Tady právě jste.</div>' : `<div class="small" style="margin-top:4px">${onMap(target.gps) ? '' : 'Mimo výřez mapy · '}Od vás <b>${d >= 1000 ? (d / 1000).toFixed(1) + ' km' : Math.round(d / 10) * 10 + ' m'}</b> ${compass(b)}, pěšky asi <b>${mins} min</b>.</div>`}</div></div>
+        <div class="row" style="margin-top:12px;gap:8px;flex-wrap:wrap"><a class="btn btn--light grow" href="${target.href}">${icon('info')} Podrobnosti</a><a class="btn btn--ghost grow" href="${mapsUrl(target.gps)}" target="_blank" rel="noopener">${icon('external')} Google Maps</a></div></section>`;
+    }
+    return `<div class="page-head">${backBtn()}<div class="grow"><h1>Mapa okolí</h1><p class="sub">Výstaviště, parky, zastávky a parkoviště · bez připojení</p></div></div>
+      <div class="mapwrap"><div class="map" id="map"><div class="map__inner" id="mapInner" style="width:${Math.round(M.w * mapScale)}px"><img src="${M.image}" alt="Mapa okolí Výstaviště Flora Olomouc" width="${M.w}" height="${M.h}" draggable="false">${targets.map(pin).join('')}</div>
+        <div class="map__ctl"><button type="button" data-zoom="1" aria-label="Přiblížit">+</button><button type="button" data-zoom="-1" aria-label="Oddálit">−</button><button type="button" data-center aria-label="Vycentrovat" title="Na cíl">◎</button></div><div class="map__attr">${esc(M.attribution)}</div></div></div>
+      <div class="legend"><span><i style="background:#1565c0"></i>Jste zde</span><span><i style="background:var(--brand)"></i>Místa a parky</span><span><i style="background:#2d4156;border-radius:3px"></i>Parkoviště</span><span><i style="background:#c8102e"></i>Zastávky</span>${target ? '<span><i style="background:var(--gold)"></i>Cíl</span>' : ''}</div>
+      ${info}
+      ${!target ? `<section class="section"><div class="section__head"><h2>Kam chcete jít?</h2></div><div class="chips">${['pavilon-a', 'skleniky', 'food-park', 'rozarium', 'botanicka', 'trznice', 'park:santovka', 'stop:tram-vystaviste'].map((id) => { const t = targets.find((x) => x.id === id); return t ? `<a class="chip" href="#/mapa?cil=${encodeURIComponent(id)}">${esc(t.name)}</a>` : ''; }).join('')}</div></section>` : ''}
+      <p class="tiny muted" style="margin-top:12px">Mapa je uložená v aplikaci (© přispěvatelé OpenStreetMap). Vzdálenosti jsou vzdušnou čarou od polohy panelu (${esc(here.name)}).</p>`;
+  }
+  function initMap() {
+    const box = $('#map'), inner = $('#mapInner'); if (!box || !inner) return;
+    const { q } = parseHash();
+    const targets = mapTargets(), target = targets.find((t) => t.id === q.cil) || targets.find((t) => t.id === HERE) || targets[0];
+    const center = (smooth) => { const [x, y] = mapXY(target.gps); box.scrollTo({ left: x * mapScale - box.clientWidth / 2, top: y * mapScale - box.clientHeight / 2 + 20, behavior: smooth ? 'smooth' : 'auto' }); };
+    center(false);
+    box.parentNode.addEventListener('click', (e) => {
+      const z = e.target.closest('[data-zoom]'), c = e.target.closest('[data-center]');
+      if (c) { center(true); return; }
+      if (!z) return;
+      const cx = (box.scrollLeft + box.clientWidth / 2) / mapScale, cy = (box.scrollTop + box.clientHeight / 2) / mapScale;
+      mapScale = Math.min(1.5, Math.max(0.35, mapScale * (z.dataset.zoom === '1' ? 1.4 : 1 / 1.4)));
+      inner.style.width = Math.round(M.w * mapScale) + 'px';
+      box.scrollTo(cx * mapScale - box.clientWidth / 2, cy * mapScale - box.clientHeight / 2);
+    });
+    // tažení myší (prst posouvá nativně)
+    let drag = null;
+    box.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; drag = { x: e.clientX, y: e.clientY, l: box.scrollLeft, t: box.scrollTop }; });
+    addEventListener('pointermove', (e) => { if (drag) box.scrollTo(drag.l - (e.clientX - drag.x), drag.t - (e.clientY - drag.y)); });
+    addEventListener('pointerup', () => { drag = null; });
+  }
+
+  /* ---------- Panel s QR kódem: odkazy ven, telefony a e-maily v režimu infopanelu ---------- */
+  const sheet = document.createElement('div'); sheet.className = 'sheet'; sheet.hidden = true; sheet.setAttribute('role', 'dialog'); sheet.setAttribute('aria-modal', 'true'); document.body.append(sheet);
+  let sheetTimer;
+  function qrSvg(text) {
+    try { const qr = window.qrcode(0, 'M'); qr.addData(text); qr.make(); return `<div class="qrbox">${qr.createSvgTag({ cellSize: 6, margin: 0, scalable: true })}</div>`; } catch { return ''; }
+  }
+  function openSheet({ title, sub, payload, shown }) {
+    sheet.innerHTML = `<div class="sheet__box"><div class="row"><div class="grow"><h2>${esc(title)}</h2><div class="small muted">${esc(sub)}</div></div><button class="iconbtn iconbtn--ink" type="button" data-close aria-label="Zavřít">${icon('x')}</button></div>
+      <div class="sheet__qr">${qrSvg(payload)}</div><div class="sheet__url">${esc(shown)}</div>
+      <p class="tiny muted" style="margin:12px 0 0;text-align:center">Infopanel neotevírá cizí stránky. Načtěte kód fotoaparátem svého telefonu.</p>
+      <button class="btn btn--block" type="button" data-close style="margin-top:12px">Zavřít</button></div>`;
+    sheet.hidden = false; clearTimeout(sheetTimer); sheetTimer = setTimeout(closeSheet, 60000);
+  }
+  function closeSheet() { sheet.hidden = true; sheet.innerHTML = ''; }
+  sheet.addEventListener('click', (e) => { if (e.target === sheet || e.target.closest('[data-close]')) closeSheet(); });
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href]'); if (!a || !KIOSK) return;
+    const href = a.getAttribute('href') || '';
+    if (/^(tel|mailto):/i.test(href)) {
+      e.preventDefault(); const v = href.replace(/^(tel|mailto):/i, '');
+      openSheet({ title: /^tel/i.test(href) ? 'Telefon' : 'E-mail', sub: 'Uložte si kontakt do telefonu', payload: href, shown: v }); return;
+    }
+    if (/^https?:\/\//i.test(a.href) && new URL(a.href).origin !== location.origin) {
+      e.preventDefault(); let host = ''; try { host = new URL(a.href).host.replace(/^www\./, ''); } catch { /* ignore */ }
+      openSheet({ title: a.textContent.trim().replace(/\s+/g, ' ').slice(0, 60) || host, sub: `Otevřít na ${host} ve vašem mobilu`, payload: a.href, shown: a.href });
+    }
+  }, true);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheet(); });
+  window.addEventListener('hashchange', closeSheet);
 
   /* ---------- Chování po vykreslení ---------- */
   function afterRender(route) {
@@ -483,7 +589,9 @@
       $('#saverBtn')?.addEventListener('click', () => window.FloraSaver && window.FloraSaver.show(true));
       $('#installBtn')?.addEventListener('click', async () => { deferredInstall.prompt(); await deferredInstall.userChoice; deferredInstall = null; $('#installRow').classList.add('hidden'); });
       $('#resetTime')?.addEventListener('click', () => { sessionStorage.removeItem('vfo-now'); location.href = location.pathname + '#/vice'; location.reload(); });
+      $('#hereSel')?.addEventListener('change', (e) => { HERE = e.target.value; try { localStorage.setItem('vfo-here', HERE); } catch { /* ignore */ } toast('Poloha panelu uložena'); });
     }
+    if (route === 'mapa') initMap();
     renderTopStatus();
   }
 

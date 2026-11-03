@@ -7,7 +7,7 @@ Webová aplikace pro návštěvníky **Výstaviště Flora Olomouc** (Wolkerova 
 | **Dnes** | Pozdrav, co se dnes koná / nejbližší akce, stavová lišta (skleníky, rozárium, botanická zahrada, food park – otevřeno/zavřeno teď), rychlé dlaždice, chystané akce, Můj program, aktuality. |
 | **Akce** | 42 akcí roku 2026 (probíhá / chystá se / proběhlo), filtr podle typu, hledání, měsíční seskupení. Detail: termín, hodiny po dnech, vstupné (na místě / online), popis, pořadatel, fotografie, místo konání, parkování, odkaz na vstupenky. Tradiční roční kalendář. |
 | **Parky** | Sbírkové skleníky (4 expozice, sezónní otevírací doba, vstupné), rozárium, botanická zahrada, Smetanovy, Bezručovy a Čechovy sady, Park pod Dómem, ASO park – se stavem „otevřeno do…“ podle měsíce, dne v týdnu i svátků. |
-| **Areál** | Mapa, pavilon A, pavilony B/C, E/G/H, oranžerie, Samba a pódia, Food park (provozovny a hodiny), restaurace, Olomoucká tržnice (St a So 7–12). |
+| **Areál** | Mapa okolí v aplikaci (OSM), pavilon A, pavilony B/C, E/G/H, oranžerie, Samba a pódia, Food park (provozovny a hodiny), restaurace, Olomoucká tržnice (St a So 7–12). |
 | **Více** | Vstupenky, dárkové poukazy a VIP karta, doprava (tramvaje 1/4/6, autobusy 16/17/28/51, vlak, zájezdové autobusy), parkování (P6 Šantovka zdarma při akcích + poznámka „kde stojím“), kontakt, aktuality, vzhled, klávesnice, spořič, instalace. |
 
 Vše osobní (Můj program, parkování) zůstává jen v zařízení (`localStorage`, klíč `vfo-app-v1`).
@@ -27,6 +27,19 @@ Poté otevřete http://localhost:5181/ (service worker vyžaduje http/https). Se
 ### Testování s jiným časem
 
 Stavy (probíhající výstava, zimní hodiny skleníků, svátek) lze ověřit parametrem `?now=`, např. `index.html?now=2026-11-06T10:30#/dnes` (probíhá Stavotech) nebo `?now=2026-07-04T11:00#/misto/rozarium` (letní sezóna). Simulace se drží po dobu karty, v záhlaví svítí žlutý štítek **TEST**; zrušíte ji v **Více → Simulovaný čas → Zrušit**.
+
+## Režim infopanelu (uzavřená aplikace)
+
+Pro veřejné dotykové panely zapněte režim infopanelu adresou `index.html?kiosk=on` (uloží se v zařízení; vypnout jde jen adresou `?kiosk=off`, v aplikaci žádné tlačítko k vypnutí není). V tomto režimu aplikace nikdy neopustí svou stránku:
+
+- **Odkazy ven** (web akce, Ticketportal, Google Maps, sociální sítě, flora-ol.cz…) se neotevřou – místo toho vyjede panel s **QR kódem** a adresou, návštěvník si ji načte vlastním telefonem. Panel se sám zavře po minutě.
+- **Telefony a e-maily** se zobrazí stejně: jako QR kód s kontaktem k uložení do mobilu.
+- **Navigace** používá vlastní **mapu okolí** (`#/mapa`), která je uložená v aplikaci: dlaždice OpenStreetMap kolem výstaviště, parků, rozária, zastávek a parkovišť. Mapa ukazuje „Jste zde“ (poloha panelu – nastavíte ve **Více → Poloha tohoto panelu** nebo adresou `?kde=skleniky`), cíl, vzdálenost, směr a odhad chůze. Funguje i bez internetu.
+- Dlouhý stisk / pravé tlačítko a přibližování stránky jsou potlačené, nabídka instalace je skrytá.
+
+Mapu vygeneruje `python -X utf8 scripts/make-map.py` (stáhne cca 170 dlaždic OSM do `assets/map/okoli.jpg` a zapíše `data/map.json`, ze kterého `build-data.py` doplní polohy). Souřadnice míst pocházejí z OpenStreetMap (Overpass).
+
+Samotný prohlížeč na panelu spusťte v kiosk režimu (např. Chrome `--kiosk --incognito "https://…/index.html?kiosk=on&kde=pavilon-a"`), aby nešlo otevřít adresní řádek ani jiné aplikace – to už aplikace sama zajistit nemůže.
 
 ## Dotyková klávesnice a spořič
 

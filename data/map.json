@@ -1,0 +1,10 @@
+{
+ "image": "assets/map/okoli.jpg",
+ "zoom": 17,
+ "tx0": 71809,
+ "ty0": 44677,
+ "w": 3840,
+ "h": 2816,
+ "tile": 256,
+ "attribution": "© přispěvatelé OpenStreetMap"
+}
