@@ -12,6 +12,10 @@ Webová aplikace pro návštěvníky **Výstaviště Flora Olomouc** (Wolkerova 
 
 Vše osobní (Můj program, parkování) zůstává jen v zařízení (`localStorage`, klíč `vfo-app-v1`).
 
+## Živá verze
+
+https://ramirroendetry.github.io/Vystaviste-Flora/ (GitHub Pages z větve `main`, repozitář https://github.com/RamirroEndetry/Vystaviste-Flora).
+
 ## Spuštění
 
 ```bash
